@@ -105,3 +105,31 @@ incTwo = inc (Zero (One E)) twoIsStd
 -- Result of C-c C-n:
 -- One (One E) , isPos/One (isStd/Pos (isPos/One isStd/E))
 
+-- Alternatively, can define increment on the base type and show
+-- that it lives in the refined type
+-- TODO maybe switch the names inc and incr ("r" for refinement)
+incr : Bits → Bits
+incr E = One E
+incr (Zero b) = One b
+incr (One b) = Zero (incr b)
+
+-- incr :> std => pos
+incrRefined : (isStd ⇒ isPos) incr
+incrRefined isStd/E = isPos/One isStd/E
+incrRefined (isStd/Pos (isPos/One x)) = isPos/Zero (incrRefined x)
+incrRefined (isStd/Pos (isPos/Zero x)) = isPos/One (isStd/Pos x)
+
+-- is there some way to formally relate the dependent type given to `inc` and the (proof that incr has) the refined function sort?
+-- can we "reify" the refinement sort as an Agda type -- like, generate
+-- the `inc` function from the definition of incr and the incrRefined proof?
+-- yes!
+
+-- in general, we can do:
+-- from (R ⇒ S) f, where f : A → B
+-- to   f' : (a : A) → R a → Σ B λ b → S b
+
+synthFun : {A B : Set} → {R : Refinement A} → {S : Refinement B}
+         → (f : A → B) → (R ⇒ S) f →
+              (a : A) → R a → Σ B λ b → S b
+synthFun {A} {B} {R} {S} f fHasRSSort =
+  λ a → λ aR → f a , fHasRSSort {a} aR
