@@ -15,7 +15,10 @@ data Top : Set where
 _∧_ : ∀ {A} → Refinement A → Refinement A → Refinement A
 R₁ ∧ R₂ = λ a → (R₁ a) × (R₂ a)
 
--- TODO union sorts
+-- Union sorts
+_∪_ : ∀ {A} → Refinement A → Refinement A → Refinement A
+R₁ ∪ R₂ = λ a → (R₁ a) ⊎ (R₂ a) 
+
 
 -- Function sorts
 _⇒_ : ∀ {A B} → Refinement A → Refinement B → Refinement (A → B)
