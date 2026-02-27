@@ -1,5 +1,6 @@
 {-- Type Refinements base --}
 open import Data.Product
+open import Data.Sum
 
 Refinement : Set → Set₁
 Refinement A = A → Set

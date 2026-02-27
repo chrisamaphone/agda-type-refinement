@@ -92,3 +92,13 @@ isDoubleisEven .(Succ n) _ .(Succ (Succ _)) (isDouble/S {n} {n2} dDouble)
 ... | dEven2 = isEven/S (isOdd/S dEven2)
 
 
+-- 2026/02/27: Lovas and Pfenning version
+-- relationally-defined "double", image of translating
+-- "double :: T → Even → Sort"
+data doubleR : (n : Nat) → Σ Nat (λ n → isEven n) → Set where
+  doubleR/Z : doubleR Zero (Zero , isEven/Z)
+  doubleR/S : (N N2 : Nat) → (DevenN2 : isEven N2) 
+            → doubleR N (N2 , DevenN2)
+            → doubleR (Succ N) (Succ (Succ N2) , (isEven/S (isOdd/S DevenN2)))
+
+
